@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FaceDetectionApp</string>
+    <string name="camera_permission_alert_title">I want camera permission!</string>
+    <string name="camera_permission_alert_text">Give me permission to use the camera, or else</string>
+    <string name="camera_permission_alert_yes">Sure</string>
+    <string name="camera_permission_fail">No camera for you then, sorry</string>
+    <string name="switch_camera">Switch camera</string>
+
 </resources>

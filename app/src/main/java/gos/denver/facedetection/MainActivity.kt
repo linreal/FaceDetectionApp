@@ -3,7 +3,6 @@ package gos.denver.facedetection
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -22,7 +21,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (allPermissionsGranted()) {
-            startFaceDetectionFragment()
+            if (savedInstanceState == null) {
+                startFaceDetectionFragment()
+            }
         } else {
             tryRequestPermission()
         }
@@ -30,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun tryRequestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA_PERMISSION)) {
-            AlertDialog.Builder(this) // todo linreal: strings
-                .setTitle("I want permission permission!")
-                .setMessage("Give me permission to use the camera, or else")
-                .setPositiveButton("Sure") { _, _ ->
+            AlertDialog.Builder(this)
+                .setTitle(R.string.camera_permission_alert_title)
+                .setMessage(R.string.camera_permission_alert_text)
+                .setPositiveButton(R.string.camera_permission_alert_yes) { _, _ ->
                     requestCameraPermission()
                 }
                 .show()
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startFaceDetectionFragment() {
-        Log.d("AdsTag", "startCameraFragment")
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, FaceDetectionFragment.newInstance())
             .commit()
@@ -63,12 +63,11 @@ class MainActivity : AppCompatActivity() {
            if (permission) {
                 startFaceDetectionFragment()
               } else {
-                  // todo linreal: move to strings
-                Toast.makeText(this, "No camera for you then, sorry", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.camera_permission_fail, Toast.LENGTH_SHORT).show()
            }
         }
 
-    companion object {
-        private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
+    private companion object {
+        const val CAMERA_PERMISSION = Manifest.permission.CAMERA
     }
 }

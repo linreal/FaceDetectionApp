@@ -53,9 +53,6 @@ dependencies {
 
     implementation(libs.bundles.arkivanov.mviKotlin)
 
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
     implementation(libs.google.facedetection)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -64,6 +61,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragments)
+
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

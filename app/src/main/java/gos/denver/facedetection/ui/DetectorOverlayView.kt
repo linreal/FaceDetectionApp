@@ -9,40 +9,27 @@ import android.view.View
 class DetectorOverlayView(context: Context?, attrs: AttributeSet?) :
     View(context, attrs) {
     private val lock = Any()
-    private val graphics: MutableList<Graphic> = mutableListOf()
+    private val faceRectangles: MutableList<FaceRectangle> = mutableListOf()
 
     private val transformationMatrix = Matrix()
 
     private var imageWidth: Int = 0
     private var imageHeight: Int = 0
 
-    private var scaleFactor = 1.0f
+    var scaleFactor = 1.0f
+        private set
 
-    private var postScaleWidthOffset = 0f
+    var postScaleWidthOffset = 0f
+        private set
 
-    private var postScaleHeightOffset = 0f
-    private var isImageFlipped = false
+    var postScaleHeightOffset = 0f
+        private set
+
+    var isImageFlipped = false
+        private set
+
     private var needUpdateTransformation = true
 
-    abstract class Graphic(private val overlay: DetectorOverlayView) {
-        abstract fun draw(canvas: Canvas?)
-
-        fun scale(imagePixel: Float): Float {
-            return imagePixel * overlay.scaleFactor
-        }
-
-        fun translateX(x: Float): Float {
-            return if (overlay.isImageFlipped) {
-                overlay.width - (scale(x) - overlay.postScaleWidthOffset)
-            } else {
-                scale(x) - overlay.postScaleWidthOffset
-            }
-        }
-
-        fun translateY(y: Float): Float {
-            return scale(y) - overlay.postScaleHeightOffset
-        }
-    }
 
     init {
         addOnLayoutChangeListener { _: View?, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int, _: Int ->
@@ -52,14 +39,14 @@ class DetectorOverlayView(context: Context?, attrs: AttributeSet?) :
 
     fun clear() {
         synchronized(lock) {
-            graphics.clear()
+            faceRectangles.clear()
         }
         postInvalidate()
     }
 
-    fun add(graphic: Graphic) {
+    fun add(graphic: FaceRectangle) {
         synchronized(lock) {
-            graphics.add(graphic)
+            faceRectangles.add(graphic)
         }
     }
 
@@ -106,7 +93,7 @@ class DetectorOverlayView(context: Context?, attrs: AttributeSet?) :
 
         synchronized(lock) {
             updateTransformationIfNeeded()
-            for (graphic in graphics) {
+            for (graphic in faceRectangles) {
                 graphic.draw(canvas)
             }
         }

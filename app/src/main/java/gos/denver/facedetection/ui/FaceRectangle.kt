@@ -5,7 +5,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import com.google.mlkit.vision.face.Face
 
-class FaceGraphic(overlay: DetectorOverlayView, private val face: Face) : DetectorOverlayView.Graphic(overlay) {
+class FaceRectangle(
+    private val face: Face, private val scaleFactor: Float,
+    private val postScaleWidthOffset: Float, private val postScaleHeightOffset: Float,
+    private val overlayWidth: Int,
+    private val isImageFlipped: Boolean,
+) {
 
     private val facePositionPaint: Paint = Paint()
 
@@ -15,7 +20,24 @@ class FaceGraphic(overlay: DetectorOverlayView, private val face: Face) : Detect
         facePositionPaint.strokeWidth = BOX_STROKE_WIDTH
     }
 
-    override fun draw(canvas: Canvas?) {
+    private fun scale(imagePixel: Float): Float {
+        return imagePixel * scaleFactor
+    }
+
+    private fun translateX(x: Float): Float {
+        return if (isImageFlipped) {
+            overlayWidth - (scale(x) - postScaleWidthOffset)
+        } else {
+            scale(x) - postScaleWidthOffset
+        }
+    }
+
+    private fun translateY(y: Float): Float {
+        return scale(y) - postScaleHeightOffset
+    }
+
+
+    fun draw(canvas: Canvas?) {
         val x = translateX(face.boundingBox.centerX().toFloat())
         val y = translateY(face.boundingBox.centerY().toFloat())
 

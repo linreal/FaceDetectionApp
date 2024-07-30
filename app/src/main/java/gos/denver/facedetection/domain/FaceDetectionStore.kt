@@ -1,6 +1,5 @@
 package gos.denver.facedetection.domain
 
-import android.graphics.Rect
 import androidx.camera.core.ImageProxy
 import com.arkivanov.mvikotlin.core.store.Store
 import com.google.mlkit.vision.face.Face
